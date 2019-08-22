@@ -3,17 +3,15 @@ package com.mcbodik.travbot.settings;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.mcbodik.travbot.settings.SettingsKey.*;
+
 public class Settings {
 
-    public static final String FILE_PATH = "";
-    public static final String FILE_NAME = "settings.txt";
-
-    public static final String URL = "url";
-    public static final String LOGIN = "login";
-    public static final String PASSWORD = "password";
+    static final String FILE_PATH = "";
+    static final String FILE_NAME = "settings.txt";
 
     private static Settings instance = new Settings();
-    private Map<String, String> settings = new HashMap<>();
+    private Map<SettingsKey, String> settings = new HashMap<>();
 
     private Settings() {
     }
@@ -32,6 +30,10 @@ public class Settings {
 
     public String getPassword() {
         return settings.get(PASSWORD);
+    }
+
+    void set(SettingsKey key, String value){
+        settings.put(key, value);
     }
 
     void setUrl(String url) {

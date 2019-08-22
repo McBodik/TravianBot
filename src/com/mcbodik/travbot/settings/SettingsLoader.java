@@ -8,7 +8,7 @@ public class SettingsLoader {
 
     private static final String DIVIDER = "=";
 
-    public static void loadSettings() throws FileNotFoundException, IOException {
+    public static void loadSettings() throws IOException {
 
         Settings settings = Settings.getInstance();
 
@@ -17,19 +17,11 @@ public class SettingsLoader {
             while ((line = br.readLine()) != null) {
                 String[] splitLine = line.split(DIVIDER);
 
-                if (splitLine[0].equals(Settings.URL)) {
-                    settings.setUrl(splitLine[1]);
-                }
-
-                if (splitLine[0].equals(Settings.LOGIN)) {
-                    settings.setLogin(splitLine[1]);
-                }
-
-                if (splitLine[0].equals(Settings.PASSWORD)) {
-                    settings.setPassword(splitLine[1]);
+                SettingsKey key = SettingsKey.getKeyByKeyword(splitLine[0]);
+                if (key != null) {
+                    settings.set(key, splitLine[1]);
                 }
             }
-
         }
     }
 }

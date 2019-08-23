@@ -7,9 +7,6 @@ import static com.mcbodik.travbot.settings.SettingsKey.*;
 
 public class Settings {
 
-    static final String FILE_PATH = "";
-    static final String FILE_NAME = "settings.txt";
-
     private static Settings instance = new Settings();
     private Map<SettingsKey, String> settings = new HashMap<>();
 

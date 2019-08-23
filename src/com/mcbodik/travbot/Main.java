@@ -1,6 +1,7 @@
 package com.mcbodik.travbot;
 
 import com.mcbodik.travbot.settings.SettingsLoader;
+import com.mcbodik.travbot.settings.VillagesLoader;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -22,6 +23,7 @@ public class Main extends Application {
 
     public static void main(String[] args) throws IOException {
         SettingsLoader.loadSettings();
+        VillagesLoader.loadVillages();
 
         launch(args);
     }

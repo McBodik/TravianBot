@@ -1,61 +1,47 @@
 package com.mcbodik.travbot;
 
-import com.sun.webkit.dom.HTMLButtonElementImpl;
+import com.mcbodik.travbot.actions.Action;
+import com.mcbodik.travbot.actions.ActionsRunner;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import org.w3c.dom.Document;
-import org.w3c.dom.html.HTMLInputElement;
 import com.mcbodik.travbot.settings.Settings;
 
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class WebViewController {
-    private Action action = Action.LOGIN;
+    private Action currentAction = Action.LOGIN;
+    private Queue<Action> actionsQueue = new LinkedList<>();
+
+    private ActionsRunner actionsRunner = new ActionsRunner();
 
     @FXML
     private WebView webView;
 
     @FXML
     private void initialize() {
+        initActions();
+
         WebEngine engine = webView.getEngine();
         engine.load(Settings.getInstance().getUrl());
 
-
-
         Worker<Void> loadWorker = engine.getLoadWorker();
         loadWorker.stateProperty().addListener((observable, oldValue, newValue) -> {
-            switch (action) {
-                case LOGIN:
-                    login(engine.getDocument());
-                    break;
+            if (actionsQueue.size() > 0) {
+                switch (actionsQueue.peek()) {
+                    case LOGIN:
+                        actionsRunner.login(engine.getDocument());
+                        actionsQueue.poll();
+                        break;
+                }
             }
         });
     }
 
-    private void login(Document doc) {
-        try {
-            ((HTMLInputElement) XPathFactory.newInstance().newXPath().evaluate(
-                    "//*[@name='name']",
-                    doc,
-                    XPathConstants.NODE))
-                    .setValue(Settings.getInstance().getLogin());
-
-            ((HTMLInputElement) XPathFactory.newInstance().newXPath().evaluate(
-                    "//*[@name='password']",
-                    doc,
-                    XPathConstants.NODE))
-                    .setValue(Settings.getInstance().getPassword());
-            ((HTMLButtonElementImpl) doc.getElementById("s1")).click();
-            System.out.println("");
-        } catch (Exception e) {
-        }
-        action = null;
+    private void initActions() {
+        actionsQueue.add(Action.LOGIN);
     }
 
-    enum Action {
-        LOGIN;
-    }
 }

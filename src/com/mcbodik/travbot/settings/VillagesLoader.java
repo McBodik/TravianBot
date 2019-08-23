@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 public class VillagesLoader {
 
     private final static String FILE_PATH = "./config";
-    private final static String FILE_NAME = "village.txt";
+    private final static String FILE_NAME = "villages.txt";
 
     private final static String VILLAGE_NAME_DIVIDER = "=";
     private final static String BUILDINGS_DIVIDER = ";";
@@ -38,7 +38,7 @@ public class VillagesLoader {
                 if (villageModel == null) continue;
 
                 if (splitLine[0].equals(KEY_RESOURCES)) {
-                    if (splitLine[1].equals(KEY_ALL)) {
+                    if (splitLine.length == 1 || splitLine[1].equals(KEY_ALL)) {
                         villageModel.setResourcesStrategy(ResourcesStrategy.ALL);//TODO another strategies
                     }
                 }

@@ -1,6 +1,7 @@
 package com.mcbodik.travbot;
 
 import com.mcbodik.travbot.actions.Action;
+import com.mcbodik.travbot.actions.ActionsHelper;
 import com.mcbodik.travbot.actions.ActionsRunner;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
@@ -29,12 +30,16 @@ public class WebViewController {
 
         Worker<Void> loadWorker = engine.getLoadWorker();
         loadWorker.stateProperty().addListener((observable, oldValue, newValue) -> {
-            if (actionsQueue.size() > 0) {
-                switch (actionsQueue.peek()) {
-                    case LOGIN:
-                        actionsRunner.login(engine.getDocument());
-                        actionsQueue.poll();
-                        break;
+            if(newValue == Worker.State.SUCCEEDED) {
+                if (actionsQueue.size() > 0) {
+                    switch (actionsQueue.peek()) {
+                        case LOGIN:
+                            actionsRunner.login(engine.getDocument());
+                            actionsQueue.poll();
+                            break;
+                        case TEST:
+                            ActionsHelper.getActiveVillage(engine.getDocument());
+                    }
                 }
             }
         });
@@ -42,6 +47,7 @@ public class WebViewController {
 
     private void initActions() {
         actionsQueue.add(Action.LOGIN);
+        actionsQueue.add(Action.TEST);
     }
 
 }
